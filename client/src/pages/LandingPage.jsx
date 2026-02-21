@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 
-const GITHUB_URL = "https://github.com/your-repo";
-const VIDEO_URL = "https://example.com/video-presentation";
+const GITHUB_URL = "https://github.com/Utkarshsingh4147/InsightDrive/";
 
 const LandingPage = () => {
   return (
