@@ -2,9 +2,9 @@
   <h1>INSIGHTDRIVE</h1>
   <p><em>Real-time Ride Feedback Intelligence for Safer Fleet Operations</em></p>
 
-  <img alt="last-commit" src="https://img.shields.io/github/last-commit/<YOUR_GITHUB_USERNAME>/InsightDrive?style=for-the-badge&logo=git&logoColor=white&color=0ea5e9">
-  <img alt="repo-top-language" src="https://img.shields.io/github/languages/top/<YOUR_GITHUB_USERNAME>/InsightDrive?style=for-the-badge&color=0ea5e9">
-  <img alt="repo-language-count" src="https://img.shields.io/github/languages/count/<YOUR_GITHUB_USERNAME>/InsightDrive?style=for-the-badge&color=0ea5e9">
+  <img alt="last-commit" src="https://img.shields.io/github/last-commit/Utkarshsingh4147/InsightDrive?style=for-the-badge&logo=git&logoColor=white&color=0ea5e9">
+  <img alt="repo-top-language" src="https://img.shields.io/github/languages/top/Utkarshsingh4147/InsightDrive?style=for-the-badge&color=0ea5e9">
+  <img alt="repo-language-count" src="https://img.shields.io/github/languages/count/Utkarshsingh4147/InsightDrive?style=for-the-badge&color=0ea5e9">
 
   <p align="center"><em>Built with the MERN Stack:</em></p>
 
