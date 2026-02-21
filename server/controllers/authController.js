@@ -9,8 +9,8 @@ const signToken = (payload) => {
 
 const cookieOptions = {
   httpOnly: true,
-  sameSite: 'lax',
-  secure: process.env.NODE_ENV === 'production',
+  secure: true,          // must be true for HTTPS
+  sameSite: 'none',      // REQUIRED for cross-origin
   maxAge: 24 * 60 * 60 * 1000
 };
 
@@ -97,7 +97,11 @@ const login = async (req, res) => {
 };
 
 const logout = async (_req, res) => {
-  res.clearCookie('token', cookieOptions);
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'none'
+  });
   return res.status(200).json({ message: 'Logout successful' });
 };
 
