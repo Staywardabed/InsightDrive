@@ -21,6 +21,12 @@ const avgFromSections = (sections = []) => {
   return (total / sections.length).toFixed(2);
 };
 
+const feedbackTimeText = (item) => {
+  const value = item?.createdAt || item?.submittedAt;
+  if (!value) return "-";
+  return new Date(value).toLocaleString();
+};
+
 const AdminDashboard = ({ activeSection = "dashboard" }) => {
   const [sentiment, setSentiment] = useState([]);
   const [trend, setTrend] = useState([]);
@@ -206,7 +212,7 @@ const AdminDashboard = ({ activeSection = "dashboard" }) => {
                 <p><span className="font-semibold">Driver:</span> {item.driver?.name || "-"}</p>
                 <p><span className="font-semibold">User:</span> {item.submittedBy?.email || "-"}</p>
                 <p><span className="font-semibold">Avg Rating:</span> {avgFromSections(item.sections)}</p>
-                <p><span className="font-semibold">Time:</span> {new Date(item.createdAt).toLocaleString()}</p>
+                <p><span className="font-semibold">Time:</span> {feedbackTimeText(item)}</p>
               </div>
               <button
                 onClick={() => setExpandedFeedbackId((prev) => (prev === item._id ? "" : item._id))}
@@ -255,7 +261,7 @@ const AdminDashboard = ({ activeSection = "dashboard" }) => {
                     <td className="px-3 py-2">{item.driver?.name || "-"}</td>
                     <td className="px-3 py-2">{item.submittedBy?.email || "-"}</td>
                     <td className="px-3 py-2">{avgFromSections(item.sections)}</td>
-                    <td className="px-3 py-2">{new Date(item.createdAt).toLocaleString()}</td>
+                    <td className="px-3 py-2">{feedbackTimeText(item)}</td>
                     <td className="px-3 py-2">
                       <button
                         onClick={() => setExpandedFeedbackId((prev) => (prev === item._id ? "" : item._id))}
