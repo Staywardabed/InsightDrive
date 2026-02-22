@@ -12,7 +12,7 @@ const sectionsMap = {
   marshalFeedback: { key: "marshal", title: "Marshal Support", help: "Pickup point support quality" }
 };
 
-const tagOptions = ["Late", "Unsafe", "Clean", "Polite", "Helpful", "Navigation", "Supportive"];
+const tagOptions = ["Late", "Unsafe", "good", "Bad", "Polite", "Helpful", "Navigation", "Supportive", "Scam"];
 
 const FeedbackForm = ({ ride, onSubmitted }) => {
   const { flags, user } = useFeedback();
