@@ -139,7 +139,7 @@
 <ol>
   <li>
     <strong>Clone the repository:</strong>
-    <pre><code>git clone https://github.com/&lt;YOUR_GITHUB_USERNAME&gt;/InsightDrive.git
+    <pre><code>git clone https://github.com/Utkarshsingh4147/InsightDrive.git
 cd InsightDrive</code></pre>
   </li>
   <li>
@@ -161,15 +161,16 @@ MONGO_URI=mongodb+srv://&lt;username&gt;:&lt;password&gt;@cluster.mongodb.net/in
 JWT_SECRET=replace_with_long_secure_secret
 JWT_EXPIRES_IN=1d
 NODE_ENV=development
-CLIENT_URL=http://localhost:5173
+CLIENT_URL=https://insightdrivelpu.vercel.app/
 
 # Reserved admin credentials
-ADMIN_NAME=System Admin
-ADMIN_EMAIL=admin@insightdrive.com
-ADMIN_PASSWORD=replace_with_strong_password
+ADMIN_NAME=Admin
+ADMIN_EMAIL=admin@gmail.com
+ADMIN_PASSWORD=123456
 </code></pre>
 
 <p><strong>Important:</strong> do not commit your real <code>.env</code> file. The root <code>.gitignore</code> already excludes it.</p>
+<p>I am providing Admin details for your testing purpose.</p>
 
 <h3 id="run-the-project">Run the Project</h3>
 <p>Use two terminals:</p>
@@ -186,15 +187,15 @@ npm run dev
 
 <p>App URLs:</p>
 <ul>
-  <li><strong>Client:</strong> <code>http://localhost:5173</code></li>
-  <li><strong>Server:</strong> <code>http://localhost:5000</code></li>
-  <li><strong>Health Check:</strong> <code>GET http://localhost:5000/api/health</code></li>
+  <li><strong>Client:</strong> <code>https://insightdrivelpu.vercel.app/</code></li>
+  <li><strong>Server:</strong> <code>https://insightdrive.onrender.com/</code></li>
+  <li><strong>Health Check:</strong> <code>GET https://insightdrive.onrender.com/api/health</code></li>
 </ul>
 
 <hr />
 
 <h2 id="api-overview">API Overview</h2>
-<p>Base URL: <code>http://localhost:5000/api</code></p>
+<p>Base URL: <code>https://insightdrive.onrender.com/api</code></p>
 
 <table>
   <thead>
