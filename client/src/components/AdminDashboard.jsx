@@ -120,7 +120,7 @@ const AdminDashboard = ({ activeSection = "dashboard" }) => {
 
             <article className="border border-sky-100 bg-white p-5 shadow-soft">
               <h3 className="text-lg font-bold text-slate-900">App Rating</h3>
-              <p className="mb-4 text-sm text-slate-600">Separate app experience score and 30-day trend.</p>
+              <p className="mb-4 text-sm text-slate-600">App experience score and 30-day trend.</p>
               <div className="mb-4 rounded-md border border-emerald-100 bg-emerald-50 p-3">
                 <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Current Avg</p>
                 <p className="text-2xl font-black text-emerald-800">{Number(appRating.avgRating || 0).toFixed(2)} / 5</p>

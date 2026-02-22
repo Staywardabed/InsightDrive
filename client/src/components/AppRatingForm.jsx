@@ -4,7 +4,7 @@ import api from "../api/axios";
 import StarRating from "./StarRating";
 import TagChips from "./TagChips";
 
-const tagOptions = ["Late", "Unsafe", "good", "Bad", "Polite", "Helpful", "Navigation", "Supportive", "Scam"];
+const tagOptions = ["Easy to use", "Complex", "Good", "Bad", "Needs improvement", "Helpful", "Fine", "User friendly"];
 
 const AppRatingForm = () => {
   const [loading, setLoading] = useState(false);
