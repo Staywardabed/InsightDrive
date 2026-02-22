@@ -8,8 +8,8 @@ const { Server } = require('socket.io');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
+const appFeedbackRoutes = require('./routes/appFeedbackRoutes');
 const driverRoutes = require('./routes/driverRoutes');
-const featureFlagRoutes = require('./routes/featureFlagRoutes');
 const rideRoutes = require('./routes/rideRoutes');
 
 const app = express();
@@ -39,8 +39,8 @@ app.get('/api/health', (_req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/feedback', feedbackRoutes);
+app.use('/api/app-feedback', appFeedbackRoutes);
 app.use('/api/drivers', driverRoutes);
-app.use('/api/flags', featureFlagRoutes);
 app.use('/api/rides', rideRoutes);
 
 io.on('connection', (socket) => {

@@ -16,9 +16,10 @@ const rowColor = (score) => {
 };
 
 const avgFromSections = (sections = []) => {
-  if (!sections.length) return "-";
-  const total = sections.reduce((sum, section) => sum + (Number(section.rating) || 0), 0);
-  return (total / sections.length).toFixed(2);
+  const rideSections = sections.filter((section) => section?.entity !== "app");
+  if (!rideSections.length) return "-";
+  const total = rideSections.reduce((sum, section) => sum + (Number(section.rating) || 0), 0);
+  return (total / rideSections.length).toFixed(2);
 };
 
 const feedbackTimeText = (item) => {
@@ -30,9 +31,10 @@ const feedbackTimeText = (item) => {
 const AdminDashboard = ({ activeSection = "dashboard" }) => {
   const [sentiment, setSentiment] = useState([]);
   const [trend, setTrend] = useState([]);
+  const [appRating, setAppRating] = useState({ avgRating: 0, feedbackCount: 0, trend: [] });
   const [drivers, setDrivers] = useState([]);
   const [recentFeedback, setRecentFeedback] = useState([]);
-  const [feedbackSortOrder, setFeedbackSortOrder] = useState("desc");
+  const [feedbackSortOrder, setFeedbackSortOrder] = useState("recent");
   const [feedbackPage, setFeedbackPage] = useState(1);
   const [feedbackTotalPages, setFeedbackTotalPages] = useState(1);
   const [expandedFeedbackId, setExpandedFeedbackId] = useState("");
@@ -44,6 +46,7 @@ const AdminDashboard = ({ activeSection = "dashboard" }) => {
       const response = await api.get("/feedback/analytics");
       setSentiment(response.data.sentiment || []);
       setTrend(response.data.trend || []);
+      setAppRating(response.data.appRating || { avgRating: 0, feedbackCount: 0, trend: [] });
     } catch (_error) {
       toast.error("Failed to load analytics");
     }
@@ -96,27 +99,49 @@ const AdminDashboard = ({ activeSection = "dashboard" }) => {
   return (
     <div className="space-y-6">
       {activeSection === "dashboard" && (
-        <section className="grid gap-5 lg:grid-cols-2">
-          <article className="border border-sky-100 bg-white p-5 shadow-soft">
-            <h3 className="text-lg font-bold text-slate-900">Sentiment Donut</h3>
-            <p className="mb-4 text-sm text-slate-600">Positive, neutral and negative mix.</p>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={donutData} dataKey="value" nameKey="name" innerRadius={52} outerRadius={92}>
-                    {donutData.map((entry) => (
-                      <Cell key={entry.name} fill={palette[entry.name] || "#334155"} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </article>
+        <section className="space-y-5">
+          <div className="grid gap-5 lg:grid-cols-2">
+            <article className="border border-sky-100 bg-white p-5 shadow-soft">
+              <h3 className="text-lg font-bold text-slate-900">Sentiment Donut</h3>
+              <p className="mb-4 text-sm text-slate-600">Positive, neutral and negative mix.</p>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={donutData} dataKey="value" nameKey="name" innerRadius={52} outerRadius={92}>
+                      {donutData.map((entry) => (
+                        <Cell key={entry.name} fill={palette[entry.name] || "#334155"} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </article>
+
+            <article className="border border-sky-100 bg-white p-5 shadow-soft">
+              <h3 className="text-lg font-bold text-slate-900">App Rating</h3>
+              <p className="mb-4 text-sm text-slate-600">Separate app experience score and 30-day trend.</p>
+              <div className="mb-4 rounded-md border border-emerald-100 bg-emerald-50 p-3">
+                <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Current Avg</p>
+                <p className="text-2xl font-black text-emerald-800">{Number(appRating.avgRating || 0).toFixed(2)} / 5</p>
+                <p className="text-xs text-emerald-700">{appRating.feedbackCount || 0} app rating entries</p>
+              </div>
+              <div className="h-40">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={appRating.trend || []}>
+                    <XAxis dataKey="date" hide />
+                    <YAxis domain={[1, 5]} />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="value" stroke="#059669" strokeWidth={3} dot={false} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </article>
+          </div>
 
           <article className="border border-sky-100 bg-white p-5 shadow-soft">
             <h3 className="text-lg font-bold text-slate-900">30 Day Average Rating</h3>
-            <p className="mb-4 text-sm text-slate-600">Daily trend from submitted sections.</p>
+            <p className="mb-4 text-sm text-slate-600">Daily trend from ride feedback ratings.</p>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={trend}>
@@ -192,15 +217,15 @@ const AdminDashboard = ({ activeSection = "dashboard" }) => {
             onChange={(event) => setFeedbackSortOrder(event.target.value)}
             className="border border-slate-300 bg-white px-3 py-1.5 text-sm"
           >
+            <option value="recent">Recent: Newest First</option>
             <option value="desc">Rating: High to Low</option>
             <option value="asc">Rating: Low to High</option>
-            <option value="recent">Recent: Newest First</option>
           </select>
           <button onClick={() => loadAllFeedback(feedbackPage, feedbackSortOrder)} className="border border-slate-300 px-3 py-1.5 text-sm">
             Refresh
           </button>
         </div>
-        <p className="mb-3 text-sm text-slate-600">Admin view of ride and driver feedback entries sorted by rating or recency.</p>
+        <p className="mb-3 text-sm text-slate-600">Admin view of ride and driver feedback entries.</p>
         <div className="space-y-3 md:hidden">
           {recentFeedback.length === 0 && (
             <div className="border border-slate-200 bg-slate-50 p-3 text-sm text-slate-500">No feedback found.</div>

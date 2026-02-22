@@ -7,10 +7,11 @@ const signToken = (payload) => {
   });
 };
 
+const isProduction = process.env.NODE_ENV === 'production';
 const cookieOptions = {
   httpOnly: true,
-  secure: true,          // must be true for HTTPS
-  sameSite: 'none',      // REQUIRED for cross-origin
+  secure: isProduction,
+  sameSite: isProduction ? 'none' : 'lax',
   maxAge: 24 * 60 * 60 * 1000
 };
 
@@ -99,8 +100,8 @@ const login = async (req, res) => {
 const logout = async (_req, res) => {
   res.clearCookie('token', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'none'
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax'
   });
   return res.status(200).json({ message: 'Logout successful' });
 };

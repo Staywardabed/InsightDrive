@@ -96,9 +96,11 @@ const AdminPage = () => {
                 )}
                 {alerts.map((alert, index) => (
                   <div key={`${alert.driverId}-${index}`} className="flex items-center justify-between rounded-2xl border border-red-100 bg-red-50/50 px-4 py-3 transition-colors hover:bg-red-50">
-                    <span className="text-sm font-bold text-slate-700">{alert.driverName}</span>
+                    <span className="text-sm font-bold text-slate-700">
+                      {alert.driverName} {alert.entity ? `(${alert.entity})` : ""}
+                    </span>
                     <span className="rounded-lg bg-red-600 px-2 py-1 text-xs font-black text-white">
-                      {alert.avgRating} Rating
+                      {Number(alert.avgRating || 0).toFixed(2)} Rating
                     </span>
                   </div>
                 ))}

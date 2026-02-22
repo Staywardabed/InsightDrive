@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import FeedbackForm from "../components/FeedbackForm";
+import AppRatingForm from "../components/AppRatingForm";
 import api from "../api/axios";
 
 const sectionAverages = (sections = []) => {
-  if (!sections.length) return "-";
-  const total = sections.reduce((sum, item) => sum + (Number(item.rating) || 0), 0);
-  return (total / sections.length).toFixed(2);
+  const rideSections = sections.filter((item) => item?.entity === "driver" || item?.entity === "trip");
+  if (!rideSections.length) return "-";
+  const total = rideSections.reduce((sum, item) => sum + (Number(item.rating) || 0), 0);
+  return (total / rideSections.length).toFixed(2);
 };
 
 const UserDashboardPage = () => {
@@ -15,6 +17,9 @@ const UserDashboardPage = () => {
   const [generating, setGenerating] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const rideHistory = history.filter((item) =>
+    (item.sections || []).some((section) => section?.entity === "driver" || section?.entity === "trip")
+  );
 
   const loadCurrentRide = async () => {
     try {
@@ -95,6 +100,14 @@ const UserDashboardPage = () => {
               >
                 My Ratings
               </button>
+              <button
+                onClick={() => handleSelectSection("rate-app")}
+                className={`w-full rounded-xl px-4 py-3 text-left text-sm font-bold transition-all ${
+                  activeSection === "rate-app" ? "bg-sky-700 text-white shadow-lg shadow-sky-100" : "text-slate-600 hover:bg-sky-50"
+                }`}
+              >
+                Rate App
+              </button>
             </nav>
           </aside>
         </div>
@@ -120,6 +133,14 @@ const UserDashboardPage = () => {
               }`}
             >
               My Ratings
+            </button>
+            <button
+              onClick={() => handleSelectSection("rate-app")}
+              className={`w-full rounded-xl px-4 py-3 text-left text-sm font-bold transition-all ${
+                activeSection === "rate-app" ? "bg-sky-700 text-white shadow-md shadow-sky-100" : "text-slate-600 hover:bg-sky-50"
+              }`}
+            >
+              Rate App
             </button>
           </nav>
         </aside>
@@ -190,12 +211,12 @@ const UserDashboardPage = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {history.length === 0 ? (
+                    {rideHistory.length === 0 ? (
                       <tr>
                         <td className="px-6 py-8 text-center text-slate-400 italic" colSpan={4}>No entries yet.</td>
                       </tr>
                     ) : (
-                      history.map((item) => (
+                      rideHistory.map((item) => (
                         <tr key={item._id} className="transition-colors hover:bg-slate-50/50">
                           <td className="px-6 py-4 font-black text-sky-700">{item.ride?.rideCode || "-"}</td>
                           <td className="px-6 py-4 text-slate-700">{item.driver?.name || "-"}</td>
@@ -215,6 +236,8 @@ const UserDashboardPage = () => {
               </div>
             </section>
           )}
+
+          {activeSection === "rate-app" && <AppRatingForm />}
         </section>
       </div>
     </main>

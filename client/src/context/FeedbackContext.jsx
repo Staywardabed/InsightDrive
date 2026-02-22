@@ -8,35 +8,26 @@ const FeedbackContext = createContext(null);
 export const FeedbackProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
-  const [flags, setFlags] = useState({
-    driverFeedback: true,
-    tripFeedback: true,
-    appFeedback: true,
-    marshalFeedback: false
-  });
   const [alerts, setAlerts] = useState([]);
 
   useEffect(() => {
-    const socket = io("https://insightdrive.onrender.com", {
+    const socket = io(import.meta.env.VITE_SOCKET_URL || "http://localhost:5000", {
       withCredentials: true
     });
 
     socket.on("low-score-alert", (payload) => {
+      if (user?.role !== "admin") {
+        return;
+      }
       setAlerts((prev) => [payload, ...prev].slice(0, 30));
       toast.error(`Low score alert: ${payload.driverName} (${payload.avgRating})`);
     });
 
     return () => socket.disconnect();
-  }, []);
+  }, [user?.role]);
 
   useEffect(() => {
     const init = async () => {
-      try {
-        const flagsRes = await api.get("/flags");
-        setFlags((prev) => ({ ...prev, ...flagsRes.data }));
-      } catch (_error) {
-      }
-
       try {
         const meRes = await api.get("/auth/me");
         setUser(meRes.data.user || null);
@@ -51,8 +42,8 @@ export const FeedbackProvider = ({ children }) => {
   }, []);
 
   const value = useMemo(
-    () => ({ user, setUser, authLoading, flags, setFlags, alerts, setAlerts }),
-    [user, authLoading, flags, alerts]
+    () => ({ user, setUser, authLoading, alerts, setAlerts }),
+    [user, authLoading, alerts]
   );
 
   return <FeedbackContext.Provider value={value}>{children}</FeedbackContext.Provider>;

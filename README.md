@@ -70,10 +70,10 @@
 </p>
 <ul>
   <li><strong>Presentation Layer (Client):</strong> Route-based pages, reusable UI components, role-protected views, API abstraction through Axios, and toast feedback.</li>
-  <li><strong>API Layer (Server):</strong> RESTful routes grouped by domain (`auth`, `rides`, `feedback`, `drivers`, `flags`).</li>
+  <li><strong>API Layer (Server):</strong> RESTful routes grouped by domain (`auth`, `rides`, `feedback`, `app-feedback`, `drivers`).</li>
   <li><strong>Domain Layer:</strong> Controllers containing business logic (feedback scoring, admin analytics, ride generation).</li>
-  <li><strong>Data Layer:</strong> Mongoose models for users, rides, drivers, feedback, and feature flags.</li>
-  <li><strong>Realtime Layer:</strong> Socket.IO emits `low-score-alert` events whenever driver averages drop below threshold.</li>
+  <li><strong>Data Layer:</strong> Mongoose models for users, rides, drivers, ride feedback, and app feedback.</li>
+  <li><strong>Realtime Layer:</strong> Socket.IO emits `low-score-alert` events instantly when low driver/trip ratings are submitted.</li>
 </ul>
 
 <hr />
@@ -81,12 +81,12 @@
 <h2 id="key-features">Key Features</h2>
 <ul>
   <li><strong>Role-based authentication:</strong> JWT-based cookie auth with separate user/admin access policies.</li>
-  <li><strong>User trip workflow:</strong> Generate sample rides and submit multi-section ride feedback.</li>
-  <li><strong>Driver performance intelligence:</strong> Auto-updated average ratings and feedback counts per driver.</li>
-  <li><strong>Admin analytics dashboard:</strong> Sentiment donut + 30-day trend charts powered by aggregated feedback data.</li>
+  <li><strong>User trip workflow:</strong> Generate sample rides and submit ride feedback for driver + trip.</li>
+  <li><strong>App rating workflow:</strong> Dedicated <code>Rate App</code> section where each user has one updatable app-rating record.</li>
+  <li><strong>Driver performance intelligence:</strong> Auto-updated average ratings and feedback counts per driver (from driver + trip ratings).</li>
+  <li><strong>Admin analytics dashboard:</strong> Sentiment + app rating charts on top row with 30-day ride feedback trend below.</li>
   <li><strong>Leaderboard and audit views:</strong> Paginated driver leaderboard and complete feedback log with sorting/filter controls.</li>
-  <li><strong>Realtime incident alerts:</strong> Live low-score notifications in the admin UI through WebSocket events.</li>
-  <li><strong>Feature flags endpoint:</strong> Configurable feedback categories exposed via API.</li>
+  <li><strong>Realtime incident alerts:</strong> Live low-score notifications in the admin UI through WebSocket events (admin only).</li>
 </ul>
 
 <hr />
@@ -161,12 +161,17 @@ MONGO_URI=mongodb+srv://&lt;username&gt;:&lt;password&gt;@cluster.mongodb.net/in
 JWT_SECRET=replace_with_long_secure_secret
 JWT_EXPIRES_IN=1d
 NODE_ENV=development
-CLIENT_URL=https://insightdrivelpu.vercel.app/
+CLIENT_URL=http://localhost:5173
 
 # Reserved admin credentials
 ADMIN_NAME=Admin
 ADMIN_EMAIL=admin@gmail.com
 ADMIN_PASSWORD=123456
+</code></pre>
+
+<p>Create a <code>.env</code> file inside <code>client/</code>:</p>
+<pre><code>VITE_API_BASE_URL=https://insightdrive.onrender.com/api
+VITE_SOCKET_URL=https://insightdrive.onrender.com
 </code></pre>
 
 <p><strong>Important:</strong> do not commit your real <code>.env</code> file. The root <code>.gitignore</code> already excludes it.</p>
@@ -187,9 +192,11 @@ npm run dev
 
 <p>App URLs:</p>
 <ul>
-  <li><strong>Client:</strong> <code>https://insightdrivelpu.vercel.app/</code></li>
-  <li><strong>Server:</strong> <code>https://insightdrive.onrender.com/</code></li>
-  <li><strong>Health Check:</strong> <code>GET https://insightdrive.onrender.com/api/health</code></li>
+  <li><strong>Client (local):</strong> <code>http://localhost:5173</code></li>
+  <li><strong>Server (local):</strong> <code>http://localhost:5000</code></li>
+  <li><strong>Health Check (local):</strong> <code>GET http://localhost:5000/api/health</code></li>
+  <li><strong>Production API:</strong> <code>https://insightdrive.onrender.com/api</code></li>
+  <li><strong>Production Socket:</strong> <code>https://insightdrive.onrender.com</code></li>
 </ul>
 
 <hr />
@@ -220,10 +227,11 @@ npm run dev
     <tr><td>Feedback</td><td>GET</td><td>/feedback/mine</td><td>Get feedback submitted by current user</td><td>User</td></tr>
     <tr><td>Feedback</td><td>GET</td><td>/feedback/all</td><td>Paginated feedback feed with sorting</td><td>Admin</td></tr>
     <tr><td>Feedback</td><td>GET</td><td>/feedback/users</td><td>Users who submitted feedback</td><td>Admin</td></tr>
-    <tr><td>Feedback</td><td>GET</td><td>/feedback/analytics</td><td>Sentiment and trend analytics</td><td>Admin</td></tr>
+    <tr><td>Feedback</td><td>GET</td><td>/feedback/analytics</td><td>Ride sentiment/trend + app rating analytics</td><td>Admin</td></tr>
+    <tr><td>App Feedback</td><td>GET</td><td>/app-feedback/mine</td><td>Get current user's app rating (single record)</td><td>User</td></tr>
+    <tr><td>App Feedback</td><td>POST</td><td>/app-feedback</td><td>Create/update current user's app rating</td><td>User</td></tr>
     <tr><td>Drivers</td><td>GET</td><td>/drivers</td><td>Paginated drivers list sorted by rating</td><td>Protected</td></tr>
     <tr><td>Drivers</td><td>POST</td><td>/drivers</td><td>Create new driver profile</td><td>Protected</td></tr>
-    <tr><td>Flags</td><td>GET</td><td>/flags</td><td>Get (or seed) feature flags</td><td>Public</td></tr>
   </tbody>
 </table>
 
@@ -241,7 +249,7 @@ npm run dev
 
 <h2 id="real-time-alerts">Real-time Alerts</h2>
 <p>
-  The server emits a Socket.IO event named <code>low-score-alert</code> whenever a driver's average rating drops below <strong>2.5</strong>. Admin clients subscribe to this channel and render incoming alerts in the dashboard.
+  The server emits a Socket.IO event named <code>low-score-alert</code> whenever a low ride rating is submitted (driver/trip rating below <strong>2.5</strong>). The frontend only shows these alerts to admin users.
 </p>
 
 <hr />

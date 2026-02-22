@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const entityTypes = ['driver', 'trip', 'app', 'marshal'];
+const entityTypes = ['driver', 'trip'];
 
 const feedbackSectionSchema = new mongoose.Schema(
   {
@@ -14,7 +14,7 @@ const feedbackSectionSchema = new mongoose.Schema(
 
 const feedbackSchema = new mongoose.Schema(
   {
-    driver: { type: mongoose.Schema.Types.ObjectId, ref: 'Driver', required: true },
+    driver: { type: mongoose.Schema.Types.ObjectId, ref: 'Driver' },
     ride: { type: mongoose.Schema.Types.ObjectId, ref: 'Ride' },
     submittedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     sections: {

@@ -1,9 +1,12 @@
 const Driver = require('../models/Driver');
 const Feedback = require('../models/Feedback');
+const AppFeedback = require('../models/AppFeedback');
 const Ride = require('../models/Ride');
 const User = require('../models/User');
 
 const toNumber = (value) => Number(value) || 0;
+const driverRatingEntities = ['driver', 'trip'];
+const rideFeedbackEntities = ['driver', 'trip'];
 
 const submitFeedback = async (req, res) => {
   try {
@@ -12,11 +15,16 @@ const submitFeedback = async (req, res) => {
     if (!Array.isArray(sections) || sections.length === 0) {
       return res.status(400).json({ message: 'sections are required' });
     }
+    const hasInvalidEntity = sections.some((section) => !rideFeedbackEntities.includes(section?.entity));
+    if (hasInvalidEntity) {
+      return res.status(400).json({ message: 'Only driver and trip sections are allowed for ride feedback' });
+    }
 
     let ride = null;
     let resolvedDriverId = driverId;
+    const includesRideFeedback = sections.some((section) => rideFeedbackEntities.includes(section?.entity));
 
-    if (rideId) {
+    if (rideId && includesRideFeedback) {
       ride = await Ride.findById(rideId);
       if (!ride) {
         return res.status(404).json({ message: 'Ride not found' });
@@ -33,13 +41,16 @@ const submitFeedback = async (req, res) => {
       resolvedDriverId = ride.driver;
     }
 
-    if (!resolvedDriverId) {
+    if (includesRideFeedback && !resolvedDriverId) {
       return res.status(400).json({ message: 'rideId or driverId is required' });
     }
 
-    const driver = await Driver.findById(resolvedDriverId);
-    if (!driver) {
-      return res.status(404).json({ message: 'Driver not found' });
+    let driver = null;
+    if (resolvedDriverId) {
+      driver = await Driver.findById(resolvedDriverId);
+      if (!driver) {
+        return res.status(404).json({ message: 'Driver not found' });
+      }
     }
 
     const feedback = await Feedback.create({
@@ -50,40 +61,48 @@ const submitFeedback = async (req, res) => {
       tags
     });
 
-    const stats = await Feedback.aggregate([
-      { $match: { driver: driver._id } },
-      { $unwind: '$sections' },
-      { $match: { 'sections.entity': 'driver' } },
-      {
-        $group: {
-          _id: '$driver',
-          avgRating: { $avg: '$sections.rating' },
-          feedbackCount: { $sum: 1 }
+    if (driver && includesRideFeedback) {
+      const stats = await Feedback.aggregate([
+        { $match: { driver: driver._id } },
+        { $unwind: '$sections' },
+        { $match: { 'sections.entity': { $in: driverRatingEntities } } },
+        {
+          $group: {
+            _id: '$driver',
+            avgRating: { $avg: '$sections.rating' },
+            feedbackCount: { $sum: 1 }
+          }
         }
+      ]);
+
+      const avgRating = stats.length ? Number(stats[0].avgRating.toFixed(2)) : driver.avgRating;
+      const feedbackCount = stats.length ? toNumber(stats[0].feedbackCount) : driver.feedbackCount;
+
+      driver.avgRating = avgRating;
+      driver.feedbackCount = feedbackCount;
+      await driver.save();
+
+      if (ride) {
+        ride.status = 'feedback_submitted';
+        await ride.save();
       }
-    ]);
 
-    const avgRating = stats.length ? Number(stats[0].avgRating.toFixed(2)) : driver.avgRating;
-    const feedbackCount = stats.length ? toNumber(stats[0].feedbackCount) : driver.feedbackCount;
-
-    driver.avgRating = avgRating;
-    driver.feedbackCount = feedbackCount;
-    await driver.save();
-
-    if (ride) {
-      ride.status = 'feedback_submitted';
-      await ride.save();
-    }
-
-    if (avgRating < 2.5) {
-      const io = req.app.get('io');
-      io.emit('low-score-alert', {
-        driverId: driver._id,
-        driverName: driver.name,
-        avgRating,
-        feedbackCount,
-        timestamp: new Date().toISOString()
-      });
+      const lowSections = sections.filter(
+        (section) => driverRatingEntities.includes(section?.entity) && Number(section?.rating) < 2.5
+      );
+      if (lowSections.length) {
+        const io = req.app.get('io');
+        lowSections.forEach((section) => {
+          io.emit('low-score-alert', {
+            driverId: driver._id,
+            driverName: driver.name,
+            avgRating: Number(section.rating),
+            feedbackCount,
+            entity: section.entity,
+            timestamp: new Date().toISOString()
+          });
+        });
+      }
     }
 
     return res.status(201).json({
@@ -120,12 +139,28 @@ const getAllFeedback = async (req, res) => {
 
     const aggregateResult = await Feedback.aggregate([
       {
+        $match: {
+          'sections.entity': { $in: rideFeedbackEntities }
+        }
+      },
+      {
         $addFields: {
           feedbackTime: { $ifNull: ['$createdAt', '$submittedAt'] },
+          rideSections: {
+            $filter: {
+              input: '$sections',
+              as: 'section',
+              cond: { $in: ['$$section.entity', rideFeedbackEntities] }
+            }
+          }
+        }
+      },
+      {
+        $addFields: {
           avgRating: {
             $cond: [
-              { $gt: [{ $size: '$sections' }, 0] },
-              { $avg: '$sections.rating' },
+              { $gt: [{ $size: '$rideSections' }, 0] },
+              { $avg: '$rideSections.rating' },
               0
             ]
           }
@@ -205,6 +240,7 @@ const getDashboardAnalytics = async (_req, res) => {
   try {
     const sentimentBreakdown = await Feedback.aggregate([
       { $unwind: '$sections' },
+      { $match: { 'sections.entity': { $in: rideFeedbackEntities } } },
       {
         $project: {
           bucket: {
@@ -227,6 +263,7 @@ const getDashboardAnalytics = async (_req, res) => {
     const trend = await Feedback.aggregate([
       { $match: { createdAt: { $gte: since } } },
       { $unwind: '$sections' },
+      { $match: { 'sections.entity': { $in: rideFeedbackEntities } } },
       {
         $group: {
           _id: { date: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } } },
@@ -236,9 +273,37 @@ const getDashboardAnalytics = async (_req, res) => {
       { $sort: { '_id.date': 1 } }
     ]);
 
+    const appOverview = await AppFeedback.aggregate([
+      {
+        $group: {
+          _id: null,
+          avgRating: { $avg: '$rating' },
+          feedbackCount: { $sum: 1 }
+        }
+      }
+    ]);
+
+    const appTrend = await AppFeedback.aggregate([
+      { $match: { createdAt: { $gte: since } } },
+      {
+        $group: {
+          _id: { date: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } } },
+          avgRating: { $avg: '$rating' }
+        }
+      },
+      { $sort: { '_id.date': 1 } }
+    ]);
+
+    const appRating = {
+      avgRating: appOverview.length ? Number(appOverview[0].avgRating.toFixed(2)) : 0,
+      feedbackCount: appOverview.length ? appOverview[0].feedbackCount : 0,
+      trend: appTrend.map((item) => ({ date: item._id.date, value: Number(item.avgRating.toFixed(2)) }))
+    };
+
     return res.status(200).json({
       sentiment: sentimentBreakdown,
-      trend: trend.map((item) => ({ date: item._id.date, value: Number(item.avgRating.toFixed(2)) }))
+      trend: trend.map((item) => ({ date: item._id.date, value: Number(item.avgRating.toFixed(2)) })),
+      appRating
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
