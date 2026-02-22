@@ -188,12 +188,13 @@ const AdminDashboard = ({ activeSection = "dashboard" }) => {
           >
             <option value="desc">Rating: High to Low</option>
             <option value="asc">Rating: Low to High</option>
+            <option value="recent">Recent: Newest First</option>
           </select>
           <button onClick={() => loadAllFeedback(feedbackPage, feedbackSortOrder)} className="border border-slate-300 px-3 py-1.5 text-sm">
             Refresh
           </button>
         </div>
-        <p className="mb-3 text-sm text-slate-600">Admin view of ride and driver feedback entries sorted by rating.</p>
+        <p className="mb-3 text-sm text-slate-600">Admin view of ride and driver feedback entries sorted by rating or recency.</p>
         <div className="space-y-3 md:hidden">
           {recentFeedback.length === 0 && (
             <div className="border border-slate-200 bg-slate-50 p-3 text-sm text-slate-500">No feedback found.</div>

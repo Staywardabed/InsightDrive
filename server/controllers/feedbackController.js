@@ -116,6 +116,8 @@ const getAllFeedback = async (req, res) => {
     const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 10, 1), 100);
     const skip = (page - 1) * limit;
     const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
+    const isRecentSort = req.query.sortOrder === 'recent';
+    const sortStage = isRecentSort ? { createdAt: -1 } : { avgRating: sortOrder, createdAt: -1 };
 
     const aggregateResult = await Feedback.aggregate([
       {
@@ -129,7 +131,7 @@ const getAllFeedback = async (req, res) => {
           }
         }
       },
-      { $sort: { avgRating: sortOrder, createdAt: -1 } },
+      { $sort: sortStage },
       {
         $facet: {
           data: [
