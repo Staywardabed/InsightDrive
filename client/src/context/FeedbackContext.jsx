@@ -11,7 +11,7 @@ export const FeedbackProvider = ({ children }) => {
   const [alerts, setAlerts] = useState([]);
 
   useEffect(() => {
-    const socket = io(import.meta.env.VITE_SOCKET_URL || "http://localhost:5000", {
+    const socket = io(import.meta.env.VITE_SOCKET_URL, {
       withCredentials: true
     });
 
